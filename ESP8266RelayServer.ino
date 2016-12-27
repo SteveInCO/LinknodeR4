@@ -4,7 +4,7 @@
 #include <ESP8266mDNS.h>
 
 const char* ssid = "<your ssid>";
-const char* password = "<your wifi password>";
+const char* password = "<your password>";
 
 ESP8266WebServer server(80);
 
@@ -42,7 +42,7 @@ void setup(void){
     Serial.println("MDNS responder started");
   }
 
-  server.on("/", handleRoot);
+  server.on("/api/relay", handleRoot);
   
   Serial.println("Initialize relays...");
   for (byte relay = 0; relay < sizeof(relays) / sizeof(int); relay++)  {
@@ -50,7 +50,7 @@ void setup(void){
     pinMode(relays[relay], OUTPUT);
     digitalWrite(relays[relay], deviceStates[relay] ? HIGH : LOW);
 
-    String request = "/relay/" + String(relay) + "/";
+    String request = "/api/relay/" + String(relay) + "/";
     Serial.println("Relay " + String(relay) + " url: " + request);
     server.on((request + "on").c_str(), [relay](){
       setState(relay, true);
@@ -59,11 +59,11 @@ void setup(void){
       setState(relay, false);
     });
   }
-  server.on("/relay/all/on", [](){
+  server.on("/api/relay/all/on", [](){
     setAll(true);
   });
 
-  server.on("/relay/all/off", [](){
+  server.on("/api/relay/all/off", [](){
     setAll(false);
   });
 
@@ -90,8 +90,8 @@ void handleRoot() {
 }
 
 // This method is called when an undefined url is specified by the caller
-void handleNotFound(){
-  server.send(400, "text/plain", "{ \"message\": \"Invalid request\"");
+void handleNotFound() {
+  server.send(400, "text/plain", "{ \"message\": \"Invalid request\" }");
 }
 
 void setAll(boolean state){
