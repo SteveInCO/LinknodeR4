@@ -11,7 +11,7 @@ https://www.amazon.com/gp/product/B01FUC9U58
 The default program loaded from the factory is intended to be used with the linksprite.io website to allow controlling the relays from anywhere on the internet. It does this by having the Linknode R4 "poll" the linksprite.io website every 1 second to determine if it should change its state. When the server indicates a state change, the Linknode sets the appropriate relay on or off as instructed. 
 
 Basically you go to http://linksprite.io and create an account, then set up devices using a registration code and a device ID for each relay, then you enter that information in to the Linknode's "Arduino Sketch" (sample in the linksprite wiki) and turn it on. It will continually poll the service waiting for something to happen.
-
+c
 I was never actually able to get it working however. For some reason my Linknode was never able to successfully get commands back from the server. I don't know if the Sketch I had was out of date with what the server was expecting, or if I just wasn't getting it set up right, or if there was a bug in the server software.
 
 I didn't spend too much time trying to figure it out though, because I didn't really like how it worked anyway. It relies on the linksprite.io website always being available (who knows how long it will be around and free), and the fact that it is polling means there will be up to a 1 second lag from the time a command is given to the time the relay responds. Not to mention creating a lot of unnecessary traffic. 
@@ -21,7 +21,6 @@ I wanted a better way. Something that was self-reliant, responsive, and efficien
 ##A Better Way
 
 The file ESP8266RelayServer.ino in this repository contains the Arduino sketch which will program the Linknode R4 to be a Wifi webserver and respond to http GET and POST requests. The protocol is fairly simple. You make http post requests to activate the relays and GET requests to get the status. 
-
 Any number of Linknode R4 servers can be attached to your local network. You will need to create some software to front-end them however. 
 
 In order to use this Sketch, 
@@ -38,7 +37,7 @@ In my case, I have an ASP.NET Core webserver running in-house that is exposed to
 
 The other alternative if you aren't concerned about security is to open up your firewall to send requests directly from the internet to the Linknode. Note however that this method provides NO security and anyone that happens across your device on the internet will be able to control it. Maybe you want that, but be warned.
 
-By using this method, the lag time from POST to relay action can be measured in milliseconds. Must more consistent than using a public service.
+By using this method, the lag time from POST to relay action can be measured in milliseconds. Much more consistent than using a public service.
 
 Suggestions, enhancements, comments, bug reports welcome.
 
